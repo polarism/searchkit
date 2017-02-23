@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, Promise, AxiosResponse } from "axios"
+import axios, { CancelToken, AxiosInstance, Promise, AxiosResponse, AxiosRequestConfig } from "axios"
 import {ImmutableQuery} from "../query"
 import {ESTransport} from "./ESTransport"
 import {defaults} from "lodash"
@@ -36,9 +36,20 @@ export class AxiosESTransport extends ESTransport{
 
   }
 
-  search(query:Object): Promise<AxiosResponse> {
-    return this.axios.post(this.options.searchUrlPath, query)
-      .then(this.getData)
+  search(query:Object, cancelPromise?:Promise<any>): Promise<AxiosResponse> {
+    let requestOptions:AxiosRequestConfig = {}
+    if(cancelPromise){
+      let source = axios.CancelToken.source()
+      requestOptions.cancelToken = source.token
+      cancelPromise.then(()=> {
+        source.cancel("Cancelling request")
+      })
+    }
+    return this.axios.post(
+      this.options.searchUrlPath,
+      query,
+      requestOptions
+    ).then(this.getData)
   }
 
   getData(response){

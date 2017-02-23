@@ -5,13 +5,18 @@ import {SearchkitManager} from "./SearchkitManager";
 export class SearchRequest {
 
   active:boolean
+  cancelPromise:Promise<any>
+  cancel:Function
   constructor(public transport:ESTransport,
     public query:Object, public searchkit:SearchkitManager){
     this.active = true
+    this.cancelPromise = new Promise((resolve, reject)=>{
+      this.cancel = resolve
+    })
   }
 
   run(){
-    return this.transport.search(this.query).then(
+    return this.transport.search(this.query, this.cancelPromise).then(
       this.setResults.bind(this)
     ).catch(
       this.setError.bind(this)
@@ -20,6 +25,7 @@ export class SearchRequest {
 
   deactivate(){
     this.active = false
+    this.cancel()
   }
 
   setResults(results){
