@@ -1,4 +1,6 @@
 ## Beta Release 2.0.0-9
+## with edits from juan-fdz-hawa:
+ ### https://github.com/juan-fdz-hawa/searchkit/commit/6bc5bb072eedc3e40e8d972c56d994a95e4463c7
 
 We're working towards releasing 2.0 and currently releasing betas to reach that goal. Notable changes include React 15 compatibility (completed), Typescript 2.2 updates (completed), Elasticsearch 5 support (in progress).
 
